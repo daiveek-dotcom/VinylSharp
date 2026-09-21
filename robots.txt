@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Marketing site sitemap
+Sitemap: https://vinylsharp.com/sitemap.xml
+
+# NOTE: The shop runs on a separate subdomain (shop.vinylsharp.com) and should
+# serve its own robots.txt + sitemap. Confirm in Google Search Console that
+# Googlebot can crawl and index the shop's product pages.

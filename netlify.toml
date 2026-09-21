@@ -1,0 +1,35 @@
+[build]
+  publish = "."
+
+# Clean URLs — the site's own canonicals / sitemap.xml use these extensionless
+# paths (e.g. https://vinylsharp.com/about), so map them to the real files.
+# status = 200 is a rewrite (URL bar stays clean), not a redirect.
+[[redirects]]
+  from = "/about"
+  to = "/about.html"
+  status = 200
+
+[[redirects]]
+  from = "/contact"
+  to = "/contact.html"
+  status = 200
+
+[[redirects]]
+  from = "/terms"
+  to = "/terms.html"
+  status = 200
+
+[[redirects]]
+  from = "/privacy"
+  to = "/privacy.html"
+  status = 200
+
+[[redirects]]
+  from = "/refund"
+  to = "/refund.html"
+  status = 200
+
+[[redirects]]
+  from = "/delete-account"
+  to = "/delete-account.html"
+  status = 200
