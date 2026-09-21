@@ -74,8 +74,7 @@
     };
     form.addEventListener('submit', function (e) {
       var endpoint = form.getAttribute('action');
-      // If no real endpoint is configured, prevent silent failure and tell the user.
-      if (!endpoint || endpoint === '#') {
+      if (!endpoint || endpoint === '#' || endpoint.indexOf('YOUR_FORM_ID') !== -1) {
         e.preventDefault();
         setStatus('err', 'Form endpoint not connected yet. Please email support@vinylsharp.com or message us on WhatsApp.');
         return;
@@ -86,8 +85,23 @@
         setStatus('err', 'Please tick the consent box so we can reply to you.');
         return;
       }
-      // Real endpoint present: allow native submit; show pending state.
+      e.preventDefault();
+      var btn = form.querySelector('button[type="submit"]');
+      if (btn) btn.disabled = true;
       setStatus('ok', 'Sending…');
+      fetch(endpoint, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
+        .then(function (res) {
+          if (res.ok) {
+            form.reset();
+            setStatus('ok', "Thanks — your message is in. We'll reply within a day.");
+          } else {
+            setStatus('err', 'Something went wrong sending that. Please email support@vinylsharp.com instead.');
+          }
+        })
+        .catch(function () {
+          setStatus('err', 'Could not send — check your connection, or email support@vinylsharp.com.');
+        })
+        .then(function () { if (btn) btn.disabled = false; });
     });
   }
 
