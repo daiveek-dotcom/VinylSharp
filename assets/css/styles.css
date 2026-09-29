@@ -245,49 +245,57 @@ body.nav-open .nav-toggle span::after { top: 0; transform: rotate(-45deg); }
    oversize it so the drift never reveals an edge. */
 .hero-bg { transform: scale(1.12); will-change: transform; }
 
-/* Spinning vinyl in the hero — also a scroll button: each click glides to the
-   next section (see main.js). The disc spins on its own; the button gives a
-   press-squash and an expanding ring on click. */
-.hero-vinyl {
-  position: absolute; right: clamp(1rem, 4vw, 3rem); bottom: clamp(1rem, 4vw, 2.5rem); z-index: 3;
-  display: flex; align-items: center; gap: .9rem;
-  background: none; border: 0; padding: 0; cursor: pointer; color: var(--paper);
+@media (prefers-reduced-motion: reduce) { .hero-bg { transform: none; } }
+
+/* Floating scroll widget — fixed to the viewport, present on every page.
+   Each click glides to the next section (see main.js); from the last
+   section it wraps back to the top. The disc spins on its own; the button
+   gives a press-squash and an expanding ring on click. Sits directly above
+   the WhatsApp float (.wa-float, bottom:20/right:20) so the two stack
+   without overlapping. */
+.scroll-fab {
+  position: fixed; right: 20px; bottom: 94px; z-index: 65;
+  display: flex; align-items: center; gap: .8rem;
+  background: none; border: 0; padding: 0; cursor: pointer;
   font: inherit; -webkit-tap-highlight-color: transparent;
+  transition: transform .18s var(--ease);
 }
-.hero-vinyl-label {
-  font-size: .68rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
-  opacity: .75; transition: opacity .3s var(--ease), transform .3s var(--ease);
+.scroll-fab:active { transform: scale(.9); }
+.scroll-fab-label {
+  font-size: .64rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase;
+  color: #fff; white-space: nowrap;
+  background: rgba(23,20,17,.6); backdrop-filter: blur(8px);
+  padding: .5em .9em; border-radius: 100px;
+  opacity: .85; transition: opacity .3s var(--ease), transform .3s var(--ease);
 }
-.hero-vinyl:hover .hero-vinyl-label, .hero-vinyl:focus-visible .hero-vinyl-label { opacity: 1; transform: translateX(-3px); }
-.hero-vinyl-disc {
-  position: relative; display: block; width: clamp(90px, 11vw, 140px); aspect-ratio: 1; border-radius: 50%;
+.scroll-fab:hover .scroll-fab-label, .scroll-fab:focus-visible .scroll-fab-label { opacity: 1; transform: translateX(-3px); }
+.scroll-fab-disc {
+  position: relative; display: block; width: clamp(58px, 6vw, 76px); aspect-ratio: 1; border-radius: 50%;
   background: repeating-radial-gradient(circle at 50% 50%, #0d0f10 0 2px, #1c1a17 2px 4px);
-  box-shadow: 0 14px 34px rgba(0,0,0,.4);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 0 26px 6px rgba(255,255,255,.16), 0 12px 28px rgba(0,0,0,.45);
   animation: hero-spin 6s linear infinite;
-  transition: box-shadow .3s var(--ease), filter .3s var(--ease);
+  transition: box-shadow .3s var(--ease);
 }
-.hero-vinyl-disc::after { content: ""; position: absolute; inset: 34%; border-radius: 50%; background: var(--maroon); }
-.hero-vinyl-disc::before {
-  content: ""; position: absolute; inset: 44%; border-radius: 50%; z-index: 1; background: #fff;
+.scroll-fab-disc::after { content: ""; position: absolute; inset: 34%; border-radius: 50%; background: var(--maroon); }
+.scroll-fab-disc::before { content: ""; position: absolute; inset: 44%; border-radius: 50%; z-index: 1; background: #fff; }
+.scroll-fab:hover .scroll-fab-disc {
+  animation-duration: 2.2s;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.24), 0 0 34px 8px rgba(255,255,255,.22), 0 16px 34px rgba(0,0,0,.55);
 }
-.hero-vinyl:hover .hero-vinyl-disc { animation-duration: 2.2s; box-shadow: 0 18px 44px rgba(0,0,0,.55); }
-.hero-vinyl:focus-visible { outline: 2px solid var(--taupe); outline-offset: 8px; border-radius: 50%; }
-.hero-vinyl { transition: transform .18s var(--ease); }
-.hero-vinyl:active { transform: scale(.9); }
-.hero-vinyl-ring {
-  position: absolute; right: 0; top: 50%; width: clamp(90px, 11vw, 140px); aspect-ratio: 1; margin-top: calc(clamp(90px, 11vw, 140px) / -2);
-  border-radius: 50%; border: 2px solid var(--taupe); opacity: 0; pointer-events: none;
+.scroll-fab:focus-visible { outline: 2px solid #fff; outline-offset: 8px; border-radius: 50%; }
+.scroll-fab-ring {
+  position: absolute; right: 0; top: 50%; width: clamp(58px, 6vw, 76px); aspect-ratio: 1; margin-top: calc(clamp(58px, 6vw, 76px) / -2);
+  border-radius: 50%; border: 2px solid #fff; opacity: 0; pointer-events: none;
 }
-.hero-vinyl.is-clicked .hero-vinyl-ring { animation: vinyl-ring .7s var(--ease); }
-.hero-vinyl.is-clicked .hero-vinyl-disc { animation: hero-spin .5s cubic-bezier(.2,.8,.2,1) 1, hero-spin 6s linear .5s infinite; }
+.scroll-fab.is-clicked .scroll-fab-ring { animation: vinyl-ring .7s var(--ease); }
+.scroll-fab.is-clicked .scroll-fab-disc { animation: hero-spin .5s cubic-bezier(.2,.8,.2,1) 1, hero-spin 6s linear .5s infinite; }
 @keyframes hero-spin { to { transform: rotate(360deg); } }
 @keyframes vinyl-ring { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.7); } }
 @media (prefers-reduced-motion: reduce) {
-  .hero-vinyl-disc { animation: none !important; }
-  .hero-vinyl-ring { display: none; }
-  .hero-bg { transform: none; }
+  .scroll-fab-disc { animation: none !important; }
+  .scroll-fab-ring { display: none; }
 }
-@media (max-width: 640px) { .hero-vinyl { display: none; } }
+@media (max-width: 640px) { .scroll-fab { display: none; } }
 
 /* Record of the week — small live-ish card, rotates weekly (see main.js) */
 .potw-card {
